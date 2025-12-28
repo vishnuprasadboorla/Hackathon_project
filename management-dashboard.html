@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEdge | Executive Insights</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #ec4899;
+            --glass: rgba(255,255,255,0.92);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 70% 15%, rgba(99,102,241,0.18), transparent 55%),
+                        radial-gradient(circle at 10% 85%, rgba(236,72,153,0.18), transparent 55%),
+                        #eef2ff;
+            color: #1f2a37;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+        header {
+            margin: 1.5rem auto 0;
+            width: min(1200px, 94%);
+            padding: 0.9rem 1.6rem;
+            border-radius: 50px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 25px 45px rgba(15,23,42,0.08);
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 1rem;
+            z-index: 1000;
+        }
+
+        header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 28px 55px rgba(15,23,42,0.12);
+        }
+        .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; transition: all 0.3s ease; }
+        .logo:hover { transform: scale(1.05); }
+        .logo-badge { 
+            width: 42px; height: 42px; border-radius: 14px; 
+            background: linear-gradient(140deg, var(--primary), var(--accent)); 
+            color: white; font-family: 'Outfit', sans-serif; font-weight: 700; 
+            display: grid; place-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .logo-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        .logo:hover .logo-badge::before {
+            opacity: 1;
+            animation: shimmer 0.6s ease-out;
+        }
+        .logo span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: #0f172a; }
+        nav { display: flex; gap: 0.6rem; align-items: center; }
+        nav a { 
+            text-decoration: none; padding: 0.5rem 1.1rem; border-radius: 30px; 
+            font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        nav a:hover::before {
+            left: 100%;
+        }
+        nav a:hover { 
+            background: rgba(99,102,241,0.12); 
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.15);
+        }
+        main {
+            width: min(1200px, 94%);
+            margin: 2.5rem auto 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+        .section-heading { 
+            font-size: 0.85rem; letter-spacing: 3px; color: var(--primary);
+            animation: slideInUp 0.6s ease-out;
+        }
+        h1 { 
+            font-family: 'Outfit', sans-serif; font-size: 2.4rem; margin: 0.4rem 0 1rem;
+            animation: slideInUp 0.6s ease-out 0.1s both;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .card {
+            background: var(--glass);
+            border-radius: 24px;
+            padding: 1.7rem;
+            box-shadow: 0 30px 45px rgba(15,23,42,0.08);
+            transition: all 0.4s ease;
+            animation: slideInUp 0.6s ease-out;
+            position: relative;
+            overflow: visible;
+            z-index: 1;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(99,102,241,0.15);
+            z-index: 10;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+        .card h2 { 
+            font-size: 2.1rem; margin: 0.3rem 0; font-family: 'Outfit', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .card:hover h2 {
+            color: var(--primary);
+        }
+        ul { list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.6rem; }
+        ul li { 
+            background: rgba(99,102,241,0.08); border-radius: 16px; 
+            padding: 0.7rem 0.9rem; font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        ul li:hover {
+            transform: translateX(5px);
+            background: rgba(99,102,241,0.15);
+            box-shadow: 0 5px 15px rgba(99,102,241,0.1);
+        }
+        ul li::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            color: var(--primary);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        ul li:hover::before {
+            opacity: 1;
+            left: -15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="index.html">
+            <div class="logo-badge">CE</div>
+            <span>CampusEdge · Management</span>
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="student-dashboard.html">Student</a>
+            <a href="faculty-dashboard.html">Faculty</a>
+            <a href="admin-dashboard.html">Admin</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <div class="section-heading">INSTITUTIONAL OVERVIEW</div>
+            <h1>Academic Management Dashboard</h1>
+            <div class="grid">
+                <div class="card">
+                    <p>Student Enrollment</p>
+                    <h2>2,847</h2>
+                    <p>Active students across all programs</p>
+                </div>
+                <div class="card">
+                    <p>Academic Performance</p>
+                    <h2>84%</h2>
+                    <p>Average pass rate this semester</p>
+                </div>
+                <div class="card">
+                    <p>Faculty Strength</p>
+                    <h2>142</h2>
+                    <p>Teaching and research faculty</p>
+                </div>
+                <div class="card">
+                    <p>System Efficiency</p>
+                    <h2>96%</h2>
+                    <p>Digital processes automation</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-heading">ANALYTICS</div>
+            <h1>Performance Insights</h1>
+            <div class="grid">
+                <div class="card">
+                    <h3>Department Performance</h3>
+                    <ul>
+                        <li>Computer Science · 89% attendance</li>
+                        <li>Electronics · 87% attendance</li>
+                        <li>Mechanical · 91% attendance</li>
+                        <li>Civil Engineering · 85% attendance</li>
+                    </ul>
+                    <p><strong>Action Required:</strong> Civil Dept needs attendance improvement</p>
+                </div>
+                <div class="card">
+                    <h3>Examination Metrics</h3>
+                    <p><strong>Hall Utilization:</strong> 92% capacity</p>
+                    <p><strong>Digital Hall Tickets:</strong> 2,654 generated</p>
+                    <p><strong>Exam Centers:</strong> 8 active halls</p>
+                    <p><strong>Invigilation:</strong> 98% faculty assigned</p>
+                </div>
+                <div class="card">
+                    <h3>Infrastructure Status</h3>
+                    <p><strong>Network Uptime:</strong> 99.8%</p>
+                    <p><strong>Server Performance:</strong> Optimal</p>
+                    <p><strong>Backup Systems:</strong> All functional</p>
+                    <p><strong>Security:</strong> No incidents reported</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-heading">ACTION ITEMS</div>
+            <h1>Strategic Priorities</h1>
+            <div class="grid">
+                <div class="card">
+                    <h3>Quality Assurance</h3>
+                    <ul>
+                        <li>Conduct semester-end academic audit</li>
+                        <li>Review examination security protocols</li>
+                        <li>Validate digital hall ticket system</li>
+                        <li>Assess faculty performance metrics</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Student Experience</h3>
+                    <ul>
+                        <li>Deploy mobile app for exam updates</li>
+                        <li>Enhance digital library resources</li>
+                        <li>Improve campus WiFi infrastructure</li>
+                        <li>Expand online learning platforms</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Strategic Initiatives</h3>
+                    <ul>
+                        <li>Implement AI-powered analytics</li>
+                        <li>Expand industry partnerships</li>
+                        <li>Upgrade examination technology</li>
+                        <li>Enhance faculty development programs</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

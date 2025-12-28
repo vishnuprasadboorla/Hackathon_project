@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEdge | Access Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #06b6d4;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.75);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 80% 20%, rgba(99,102,241,0.15), transparent 45%),
+                        radial-gradient(circle at 20% 80%, rgba(236,72,153,0.15), transparent 50%),
+                        #eef2ff;
+            color: #0f172a;
+            min-height: 100vh;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        header {
+            margin: 1.5rem auto 0;
+            width: min(1200px, 92%);
+            padding: 0.9rem 1.5rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px rgba(15, 23, 42, 0.12);
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; transition: all 0.3s ease; }
+        .logo:hover { transform: scale(1.05); }
+        .logo-badge {
+            width: 42px; height: 42px; border-radius: 14px;
+            background: linear-gradient(135deg, #6366f1, #ec4899);
+            color: white; font-family: 'Outfit', sans-serif; font-weight: 700;
+            display: grid; place-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .logo-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        .logo:hover .logo-badge::before {
+            opacity: 1;
+            animation: shimmer 0.6s ease-out;
+        }
+        .logo span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--dark); }
+
+        nav { display: flex; gap: 0.8rem; align-items: center; }
+        nav a { 
+            text-decoration: none; padding: 0.55rem 1.2rem; border-radius: 30px; 
+            font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        nav a:hover::before {
+            left: 100%;
+        }
+        nav a:hover { 
+            background: rgba(99,102,241,0.12); 
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.15);
+        }
+        .pill-btn { 
+            background: var(--dark); 
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .pill-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(99,102,241,0.3);
+        }
+
+        main {
+            width: min(1200px, 92%);
+            margin: 3rem auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .card {
+            background: var(--glass);
+            border-radius: 30px;
+            padding: 2.5rem;
+            box-shadow: 0 35px 60px rgba(99,102,241,0.12);
+            border: 1px solid rgba(255,255,255,0.6);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 50px 100px rgba(99,102,241,0.2);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        h1 { font-family: 'Outfit', sans-serif; font-size: 2.4rem; margin-bottom: 0.5rem; }
+        p { color: #475569; line-height: 1.7; }
+
+        .form-group { margin-top: 1.3rem; display: flex; flex-direction: column; gap: 0.4rem; }
+        label { font-size: 0.95rem; color: #475569; letter-spacing: 0.5px; }
+        input, select {
+            border: 1px solid rgba(15,23,42,0.12);
+            border-radius: 18px;
+            padding: 0.9rem 1.1rem;
+            font-size: 1rem;
+            background: rgba(255,255,255,0.9);
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+            transform: translateY(-2px);
+        }
+
+        .actions { margin-top: 0.8rem; display: flex; justify-content: space-between; font-size: 0.9rem; color: #475569; }
+        .actions a { color: var(--primary); text-decoration: none; }
+
+        .btn-primary {
+            margin-top: 1.6rem;
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 0.95rem 1.2rem;
+            border-radius: 18px;
+            border: none;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(120deg, #6366f1, #ec4899);
+            box-shadow: 0 15px 35px rgba(99,102,241,0.35);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+        }
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(99,102,241,0.4);
+        }
+
+        .info h2 { font-family: 'Outfit', sans-serif; font-size: 2rem; margin-bottom: 0.6rem; }
+        .tag-row { margin: 1.2rem 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .tag-row span { 
+            padding: 0.5rem 0.9rem; border-radius: 999px; 
+            background: rgba(255,255,255,0.9); font-size: 0.85rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .tag-row span:hover {
+            background: rgba(99,102,241,0.1);
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99,102,241,0.15);
+        }
+        ul { margin-left: 1.2rem; color: #475569; line-height: 1.6; }
+
+        footer { text-align: center; padding: 2rem 0 3rem; color: #475569; font-size: 0.9rem; }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 15% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: min(400px, 90%);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: modalSlide 0.3s ease-out;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: var(--primary);
+        }
+
+        .modal h2 {
+            font-family: 'Outfit', sans-serif;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .modal-btn {
+            background: linear-gradient(120deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99,102,241,0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="index.html">
+            <div class="logo-badge">CE</div>
+            <span>CampusEdge</span>
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="student-dashboard.html">Student</a>
+            <a href="faculty-dashboard.html">Faculty</a>
+            <a href="admin-dashboard.html">Admin</a>
+            <a href="management-dashboard.html">Management</a>
+            <a class="pill-btn" href="#">Help</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="card">
+            <h1>Login</h1>
+            <p>Select your role and access your personalized dashboard.</p>
+            <div class="form-group">
+                <label for="role">Select Role</label>
+                <select id="role" required>
+                    <option value="">Choose your role</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                    <option value="management">Management</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="email">Email / Roll Number</label>
+                <input id="email" type="text" placeholder="Enter your email or roll number" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" placeholder="Enter your password" required>
+            </div>
+            <div class="actions">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="#" onclick="showForgotPassword()">Forgot password?</a>
+            </div>
+            <button class="btn-primary" type="submit" onclick="handleLogin()">Login</button>
+        </div>
+        <div class="card info" style="background: rgba(255,255,255,0.85);">
+            <h2>Quick Access</h2>
+            <p>Login to access your personalized dashboard based on your role.</p>
+            <div class="tag-row">
+                <span><a href="student-dashboard.html" style="text-decoration: none; color: inherit;">Student Portal</a></span>
+                <span><a href="faculty-dashboard.html" style="text-decoration: none; color: inherit;">Faculty Portal</a></span>
+                <span><a href="admin-dashboard.html" style="text-decoration: none; color: inherit;">Admin Portal</a></span>
+                <span><a href="management-dashboard.html" style="text-decoration: none; color: inherit;">Management Portal</a></span>
+            </div>
+            <ul>
+                <li><strong>Students:</strong> View attendance, download hall tickets, check exam schedules</li>
+                <li><strong>Faculty:</strong> Mark attendance, manage courses, post announcements</li>
+                <li><strong>Admin:</strong> Generate hall tickets, manage seating, oversee operations</li>
+                <li><strong>Management:</strong> View analytics, monitor performance, strategic insights</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>CampusEdge · Academic & Examination Management System © 2025</footer>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeForgotPassword()">&times;</span>
+            <h2>Reset Password</h2>
+            <p style="color: #666; margin-bottom: 1.5rem;">Enter your email address and we'll send you a link to reset your password.</p>
+            <div class="form-group">
+                <label for="resetEmail">Email Address</label>
+                <input id="resetEmail" type="email" placeholder="Enter your email address" style="margin-top: 0.5rem;">
+            </div>
+            <button class="modal-btn" onclick="sendResetLink()">Send Reset Link</button>
+        </div>
+    </div>
+    
+    <script>
+        function handleLogin() {
+            const role = document.getElementById('role').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!role) {
+                alert('Please select your role');
+                return;
+            }
+            
+            if (!email || !password) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            // Redirect based on selected role
+            const redirectMap = {
+                'student': 'student-dashboard.html',
+                'faculty': 'faculty-dashboard.html',
+                'admin': 'admin-dashboard.html',
+                'management': 'management-dashboard.html'
+            };
+            
+            window.location.href = redirectMap[role];
+        }
+
+        function showForgotPassword() {
+            document.getElementById('forgotModal').style.display = 'block';
+        }
+
+        function closeForgotPassword() {
+            document.getElementById('forgotModal').style.display = 'none';
+        }
+
+        function sendResetLink() {
+            const email = document.getElementById('resetEmail').value;
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+            alert('Password reset link has been sent to ' + email);
+            closeForgotPassword();
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('forgotModal');
+            if (event.target == modal) {
+                closeForgotPassword();
+            }
+        }
+    </script>
+</body>
+</html>

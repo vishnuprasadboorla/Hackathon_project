@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEdge | Faculty Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #ec4899;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.9);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 70% 10%, rgba(99,102,241,0.18), transparent 50%),
+                        radial-gradient(circle at 15% 85%, rgba(14,165,233,0.15), transparent 55%),
+                        #eef2ff;
+            color: #1f2a37;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        header {
+            margin: 1.5rem auto 0;
+            width: min(1200px, 94%);
+            padding: 0.9rem 1.6rem;
+            border-radius: 50px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 25px 45px rgba(15,23,42,0.08);
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 1rem;
+            z-index: 1000;
+        }
+
+        header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 28px 55px rgba(15,23,42,0.12);
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; transition: all 0.3s ease; }
+        .logo:hover { transform: scale(1.05); }
+        .logo-badge { 
+            width: 42px; height: 42px; border-radius: 14px; 
+            background: linear-gradient(140deg, var(--primary), var(--accent)); 
+            color: white; font-family: 'Outfit', sans-serif; font-weight: 700; 
+            display: grid; place-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .logo-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        .logo:hover .logo-badge::before {
+            opacity: 1;
+            animation: shimmer 0.6s ease-out;
+        }
+        .logo span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--dark); }
+
+        nav { display: flex; gap: 0.6rem; align-items: center; }
+        nav a { 
+            text-decoration: none; padding: 0.5rem 1.1rem; border-radius: 30px; 
+            font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        nav a:hover::before {
+            left: 100%;
+        }
+        nav a:hover { 
+            background: rgba(99,102,241,0.12); 
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.15);
+        }
+
+        .dashboard {
+            width: min(1200px, 94%);
+            margin: 2.5rem auto 4rem;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+        }
+
+        aside {
+            background: var(--glass);
+            border-radius: 28px;
+            padding: 1.8rem;
+            box-shadow: 0 30px 50px rgba(99,102,241,0.15);
+            animation: slideInLeft 0.8s ease-out;
+            transition: all 0.3s ease;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            z-index: 100;
+        }
+
+        aside:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 35px 70px rgba(99,102,241,0.2);
+        }
+
+        aside h3 { font-family: 'Outfit', sans-serif; margin-bottom: 1rem; }
+        aside ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        aside li { 
+            padding: 0.75rem 1rem; border-radius: 18px; 
+            background: rgba(99,102,241,0.08); font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        aside li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        aside li:hover::before {
+            left: 100%;
+        }
+        aside li:hover {
+            transform: translateX(5px);
+            background: rgba(99,102,241,0.15);
+            color: var(--primary);
+        }
+        aside li.active { 
+            background: linear-gradient(120deg, var(--primary), var(--accent)); 
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .content { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2rem;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); 
+            gap: 1.5rem; 
+        }
+
+        .card {
+            background: var(--glass);
+            border-radius: 24px;
+            padding: 1.7rem;
+            box-shadow: 0 30px 45px rgba(15,23,42,0.08);
+            transition: all 0.4s ease;
+            animation: slideInUp 0.6s ease-out;
+            position: relative;
+            overflow: visible;
+            z-index: 1;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(99,102,241,0.15);
+            z-index: 10;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h2 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin: 0.3rem 0; }
+
+        /* Attendance Table */
+        .attendance-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .attendance-table th,
+        .attendance-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .attendance-table th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .attendance-table tr:hover {
+            background: #f8fafc;
+            transform: scale(1.01);
+        }
+
+        .attendance-checkbox {
+            transform: scale(1.2);
+            transition: all 0.3s ease;
+        }
+
+        .attendance-checkbox:hover {
+            transform: scale(1.4);
+        }
+
+        /* Course Tabs */
+        .course-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .course-tab {
+            padding: 0.8rem 1.5rem;
+            background: rgba(99,102,241,0.1);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .course-tab.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .course-tab:hover {
+            background: rgba(99,102,241,0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Grade Entry */
+        .grade-input {
+            width: 80px;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .grade-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99,102,241,0.1);
+        }
+
+        /* Announcement Form */
+        .announcement-form {
+            display: grid;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .announcement-form input,
+        .announcement-form textarea {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: inherit;
+        }
+
+        .announcement-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .announcement-form button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .announcement-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(99,102,241,0.3);
+        }
+
+        /* Schedule Calendar */
+        .schedule-calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calendar-day.has-class {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .calendar-day.today {
+            background: #fbbf24;
+            color: white;
+        }
+
+        .calendar-day:hover {
+            transform: scale(1.05);
+        }
+
+        /* Chatbot */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(99,102,241,0.3);
+            transition: all 0.3s ease;
+            z-index: 9998;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 35px rgba(99,102,241,0.4);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 2rem;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 9998;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            border-radius: 20px 20px 0 0;
+            font-weight: 600;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .message {
+            padding: 0.8rem;
+            border-radius: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #e5e7eb;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            align-self: flex-start;
+        }
+
+        .chatbot-input {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            padding: 0.8rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-question {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-question:hover {
+            background: rgba(99,102,241,0.1);
+            color: var(--primary);
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 960px) {
+            .dashboard { grid-template-columns: 1fr; }
+            header, .dashboard { width: min(1200px, 90%); }
+            .chatbot-window { width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="index.html">
+            <div class="logo-badge">CE</div>
+            <span>CampusEdge · Faculty</span>
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="student-dashboard.html">Student</a>
+            <a href="admin-dashboard.html">Admin</a>
+            <a href="management-dashboard.html">Management</a>
+        </nav>
+    </header>
+
+    <section class="dashboard">
+        <aside>
+            <h3>Navigation</h3>
+            <ul>
+                <li class="active" onclick="showSection('dashboard')">Dashboard</li>
+                <li onclick="showSection('attendance')">Attendance</li>
+                <li onclick="showSection('courses')">My Courses</li>
+                <li onclick="showSection('grades')">Grade Entry</li>
+                <li onclick="showSection('announcements')">Announcements</li>
+                <li onclick="showSection('schedule')">Schedule</li>
+                <li onclick="showSection('reports')">Reports</li>
+            </ul>
+        </aside>
+
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section">
+                <div class="grid">
+                    <div class="card">
+                        <p>Today's Classes</p>
+                        <h2>3</h2>
+                        <p>Next: Data Structures at 10:00 AM</p>
+                    </div>
+                    <div class="card">
+                        <p>Students Enrolled</p>
+                        <h2>156</h2>
+                        <p>Across 4 courses this semester</p>
+                    </div>
+                    <div class="card">
+                        <p>Pending Evaluations</p>
+                        <h2>28</h2>
+                        <p>Mid-sem papers to be graded</p>
+                    </div>
+                    <div class="card">
+                        <p>Office Hours</p>
+                        <h2>12</h2>
+                        <p>Student consultations this week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Section -->
+            <div id="attendance-section" class="section hidden">
+                <div class="card">
+                    <h3>Mark Attendance</h3>
+                    <div class="course-tabs">
+                        <button class="course-tab active" onclick="showCourse('ds')">Data Structures</button>
+                        <button class="course-tab" onclick="showCourse('os')">Operating Systems</button>
+                        <button class="course-tab" onclick="showCourse('dbms')">DBMS</button>
+                        <button class="course-tab" onclick="showCourse('se')">Software Engineering</button>
+                    </div>
+                    
+                    <div id="course-ds">
+                        <p><strong>Date:</strong> March 10, 2025 · <strong>Time:</strong> 10:00 AM - 11:00 AM · <strong>Room:</strong> CS-301</p>
+                        <table class="attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No.</th>
+                                    <th>Student Name</th>
+                                    <th>Present</th>
+                                    <th>Total Classes</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>21CSE001</td>
+                                    <td>Aarav Sharma</td>
+                                    <td><input type="checkbox" class="attendance-checkbox" checked></td>
+                                    <td>24/26</td>
+                                    <td>92%</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE002</td>
+                                    <td>Priya Patel</td>
+                                    <td><input type="checkbox" class="attendance-checkbox" checked></td>
+                                    <td>23/26</td>
+                                    <td>88%</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE003</td>
+                                    <td>Vikram Singh</td>
+                                    <td><input type="checkbox" class="attendance-checkbox"></td>
+                                    <td>19/26</td>
+                                    <td style="color: #dc2626;">73%</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE004</td>
+                                    <td>Ananya Gupta</td>
+                                    <td><input type="checkbox" class="attendance-checkbox" checked></td>
+                                    <td>25/26</td>
+                                    <td>96%</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE005</td>
+                                    <td>Rohit Kumar</td>
+                                    <td><input type="checkbox" class="attendance-checkbox" checked></td>
+                                    <td>22/26</td>
+                                    <td>85%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button style="margin-top: 1rem; padding: 0.8rem 2rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; cursor: pointer;" onclick="saveAttendance()">Save Attendance</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Section -->
+            <div id="courses-section" class="section hidden">
+                <div class="card">
+                    <h3>My Courses - Spring 2025</h3>
+                    <div class="grid" style="margin-top: 1rem;">
+                        <div class="card" style="cursor: pointer;" onclick="showCourseDetails('ds')">
+                            <h4>Data Structures</h4>
+                            <p><strong>Code:</strong> CS301</p>
+                            <p><strong>Students:</strong> 52</p>
+                            <p><strong>Schedule:</strong> Mon, Wed, Fri 10:00 AM</p>
+                            <p><strong>Room:</strong> CS-301</p>
+                        </div>
+                        <div class="card" style="cursor: pointer;" onclick="showCourseDetails('os')">
+                            <h4>Operating Systems</h4>
+                            <p><strong>Code:</strong> CS401</p>
+                            <p><strong>Students:</strong> 48</p>
+                            <p><strong>Schedule:</strong> Tue, Thu 2:00 PM</p>
+                            <p><strong>Room:</strong> CS-302</p>
+                        </div>
+                        <div class="card" style="cursor: pointer;" onclick="showCourseDetails('dbms')">
+                            <h4>Database Management</h4>
+                            <p><strong>Code:</strong> CS402</p>
+                            <p><strong>Students:</strong> 45</p>
+                            <p><strong>Schedule:</strong> Mon, Wed 2:00 PM</p>
+                            <p><strong>Room:</strong> CS-303</p>
+                        </div>
+                        <div class="card" style="cursor: pointer;" onclick="showCourseDetails('se')">
+                            <h4>Software Engineering</h4>
+                            <p><strong>Code:</strong> CS403</p>
+                            <p><strong>Students:</strong> 38</p>
+                            <p><strong>Schedule:</strong> Tue, Fri 11:00 AM</p>
+                            <p><strong>Room:</strong> CS-304</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grade Entry Section -->
+            <div id="grades-section" class="section hidden">
+                <div class="card">
+                    <h3>Grade Entry</h3>
+                    <div class="course-tabs">
+                        <button class="course-tab active" onclick="showGradeCourse('ds')">Data Structures</button>
+                        <button class="course-tab" onclick="showGradeCourse('os')">Operating Systems</button>
+                        <button class="course-tab" onclick="showGradeCourse('dbms')">DBMS</button>
+                    </div>
+                    
+                    <div id="grade-ds">
+                        <p><strong>Assessment:</strong> Mid-Semester Exam · <strong>Max Marks:</strong> 100</p>
+                        <table class="attendance-table">
+                            <thead>
+                                <tr>
+                                    <th>Roll No.</th>
+                                    <th>Student Name</th>
+                                    <th>Marks Obtained</th>
+                                    <th>Grade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>21CSE001</td>
+                                    <td>Aarav Sharma</td>
+                                    <td><input type="number" class="grade-input" value="85" max="100"></td>
+                                    <td>A</td>
+                                    <td style="color: #16a34a;">Pass</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE002</td>
+                                    <td>Priya Patel</td>
+                                    <td><input type="number" class="grade-input" value="92" max="100"></td>
+                                    <td>A+</td>
+                                    <td style="color: #16a34a;">Pass</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE003</td>
+                                    <td>Vikram Singh</td>
+                                    <td><input type="number" class="grade-input" value="68" max="100"></td>
+                                    <td>B</td>
+                                    <td style="color: #16a34a;">Pass</td>
+                                </tr>
+                                <tr>
+                                    <td>21CSE004</td>
+                                    <td>Ananya Gupta</td>
+                                    <td><input type="number" class="grade-input" value="78" max="100"></td>
+                                    <td>B+</td>
+                                    <td style="color: #16a34a;">Pass</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button style="margin-top: 1rem; padding: 0.8rem 2rem; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; border: none; border-radius: 12px; cursor: pointer;" onclick="saveGrades()">Save Grades</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements Section -->
+            <div id="announcements-section" class="section hidden">
+                <div class="card">
+                    <h3>Create Announcement</h3>
+                    <div class="announcement-form">
+                        <input type="text" placeholder="Announcement Title" id="announcementTitle">
+                        <select id="announcementCourse">
+                            <option value="">Select Course</option>
+                            <option value="ds">Data Structures</option>
+                            <option value="os">Operating Systems</option>
+                            <option value="dbms">DBMS</option>
+                            <option value="se">Software Engineering</option>
+                            <option value="all">All Courses</option>
+                        </select>
+                        <textarea placeholder="Announcement Message" id="announcementMessage"></textarea>
+                        <button onclick="publishAnnouncement()">Publish Announcement</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>Recent Announcements</h3>
+                    <div id="announcementsList">
+                        <div style="padding: 1rem; background: #f8fafc; border-radius: 12px; margin-bottom: 1rem;">
+                            <h4>Mid-Semester Exam Schedule</h4>
+                            <p><strong>Course:</strong> Data Structures</p>
+                            <p>Mid-semester exam will be held on March 15, 2025, at 9:00 AM in Hall 201. Please bring your hall tickets and ID cards.</p>
+                            <small style="color: #6b7280;">Posted on March 8, 2025</small>
+                        </div>
+                        <div style="padding: 1rem; background: #f8fafc; border-radius: 12px; margin-bottom: 1rem;">
+                            <h4>Assignment Deadline Extended</h4>
+                            <p><strong>Course:</strong> Operating Systems</p>
+                            <p>Assignment 3 deadline has been extended to March 18, 2025. Submit your work through the course portal.</p>
+                            <small style="color: #6b7280;">Posted on March 7, 2025</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Section -->
+            <div id="schedule-section" class="section hidden">
+                <div class="card">
+                    <h3>Weekly Schedule</h3>
+                    <div class="schedule-calendar">
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Sun</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Mon</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Tue</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Wed</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Thu</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Fri</div>
+                        <div style="font-weight: 600; text-align: center; padding: 1rem;">Sat</div>
+                        
+                        <div class="calendar-day">9</div>
+                        <div class="calendar-day has-class">10<br><small>DS 10AM<br>DBMS 2PM</small></div>
+                        <div class="calendar-day has-class">11<br><small>OS 2PM<br>SE 11AM</small></div>
+                        <div class="calendar-day has-class">12<br><small>DS 10AM<br>DBMS 2PM</small></div>
+                        <div class="calendar-day has-class">13<br><small>OS 2PM</small></div>
+                        <div class="calendar-day has-class">14<br><small>DS 10AM<br>SE 11AM</small></div>
+                        <div class="calendar-day">15</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reports-section" class="section hidden">
+                <div class="card">
+                    <h3>Course Performance Reports</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Data Structures</h4>
+                            <p><strong>Average Attendance:</strong> 89%</p>
+                            <p><strong>Average Grade:</strong> B+</p>
+                            <p><strong>Pass Rate:</strong> 96%</p>
+                            <p><strong>Students Below 75%:</strong> 3</p>
+                        </div>
+                        <div class="card">
+                            <h4>Operating Systems</h4>
+                            <p><strong>Average Attendance:</strong> 91%</p>
+                            <p><strong>Average Grade:</strong> A-</p>
+                            <p><strong>Pass Rate:</strong> 98%</p>
+                            <p><strong>Students Below 75%:</strong> 1</p>
+                        </div>
+                        <div class="card">
+                            <h4>DBMS</h4>
+                            <p><strong>Average Attendance:</strong> 85%</p>
+                            <p><strong>Average Grade:</strong> B</p>
+                            <p><strong>Pass Rate:</strong> 93%</p>
+                            <p><strong>Students Below 75%:</strong> 4</p>
+                        </div>
+                        <div class="card">
+                            <h4>Software Engineering</h4>
+                            <p><strong>Average Attendance:</strong> 87%</p>
+                            <p><strong>Average Grade:</strong> B+</p>
+                            <p><strong>Pass Rate:</strong> 95%</p>
+                            <p><strong>Students Below 75%:</strong> 2</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot -->
+    <div class="chatbot-toggle" onclick="toggleChatbot()">💬</div>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Faculty Assistant</span>
+                <span onclick="toggleChatbot()" style="cursor: pointer;">×</span>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot">Hello! I'm your faculty assistant. How can I help you today?</div>
+            <div class="quick-questions">
+                <div class="quick-question" onclick="askQuestion('Show attendance summary')">Attendance Summary</div>
+                <div class="quick-question" onclick="askQuestion('Students below 75%')">Low Attendance</div>
+                <div class="quick-question" onclick="askQuestion('Grade distribution')">Grade Stats</div>
+                <div class="quick-question" onclick="askQuestion('Upcoming classes')">My Schedule</div>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your question..." onkeypress="handleChatKeypress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('aside li').forEach(li => {
+                li.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Course tabs for attendance
+        function showCourse(course) {
+            document.querySelectorAll('.course-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Grade course tabs
+        function showGradeCourse(course) {
+            document.querySelectorAll('.course-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Course details
+        function showCourseDetails(course) {
+            const courseNames = {
+                'ds': 'Data Structures',
+                'os': 'Operating Systems',
+                'dbms': 'Database Management',
+                'se': 'Software Engineering'
+            };
+            alert(`Opening detailed view for ${courseNames[course]}`);
+        }
+
+        // Save attendance
+        function saveAttendance() {
+            alert('Attendance saved successfully!');
+        }
+
+        // Save grades
+        function saveGrades() {
+            alert('Grades saved successfully!');
+        }
+
+        // Publish announcement
+        function publishAnnouncement() {
+            const title = document.getElementById('announcementTitle').value;
+            const course = document.getElementById('announcementCourse').value;
+            const message = document.getElementById('announcementMessage').value;
+            
+            if (!title || !course || !message) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            const announcementsList = document.getElementById('announcementsList');
+            const newAnnouncement = document.createElement('div');
+            newAnnouncement.style.cssText = 'padding: 1rem; background: #f8fafc; border-radius: 12px; margin-bottom: 1rem;';
+            newAnnouncement.innerHTML = `
+                <h4>${title}</h4>
+                <p><strong>Course:</strong> ${course}</p>
+                <p>${message}</p>
+                <small style="color: #6b7280;">Posted on ${new Date().toLocaleDateString()}</small>
+            `;
+            announcementsList.insertBefore(newAnnouncement, announcementsList.firstChild);
+            
+            // Clear form
+            document.getElementById('announcementTitle').value = '';
+            document.getElementById('announcementCourse').value = '';
+            document.getElementById('announcementMessage').value = '';
+            
+            alert('Announcement published successfully!');
+        }
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            window.style.display = window.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function askQuestion(question) {
+            addMessage(question, 'user');
+            setTimeout(() => {
+                const answer = getFacultyAnswer(question);
+                addMessage(answer, 'bot');
+            }, 500);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                askQuestion(message);
+                input.value = '';
+            }
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chatbotMessages');
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+            message.textContent = text;
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function getFacultyAnswer(question) {
+            const answers = {
+                'Show attendance summary': 'Overall attendance: DS-89%, OS-91%, DBMS-85%, SE-87%. 10 students need attention.',
+                'Students below 75%': 'Total 10 students below 75%: DS(3), OS(1), DBMS(4), SE(2). Check Reports section for details.',
+                'Grade distribution': 'Current grade distribution: A+(15%), A(25%), B+(30%), B(20%), C+(8%), Others(2%).',
+                'Upcoming classes': 'Today: DS at 10:00 AM (CS-301), DBMS at 2:00 PM (CS-303). Tomorrow: OS at 2:00 PM.',
+                'default': 'I can help with attendance tracking, grade management, course statistics, and scheduling. What do you need?'
+            };
+            
+            return answers[question] || answers['default'];
+        }
+    </script>
+</body>
+</html>

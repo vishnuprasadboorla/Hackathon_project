@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusEdge | Admin Control Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --accent: #06b6d4;
+            --glass: rgba(255,255,255,0.9);
+            --dark: #0f172a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(circle at 85% 15%, rgba(99,102,241,0.2), transparent 55%),
+                        radial-gradient(circle at 10% 85%, rgba(6,182,212,0.2), transparent 55%),
+                        #eef2ff;
+            color: #1f2a37;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        header {
+            margin: 1.5rem auto 0;
+            width: min(1200px, 94%);
+            padding: 0.9rem 1.6rem;
+            border-radius: 50px;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 25px 45px rgba(15,23,42,0.08);
+            animation: slideInUp 0.6s ease-out;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 1rem;
+            z-index: 1000;
+        }
+
+        header:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 28px 55px rgba(15,23,42,0.12);
+        }
+
+        .logo { display: flex; align-items: center; gap: 0.7rem; text-decoration: none; transition: all 0.3s ease; }
+        .logo:hover { transform: scale(1.05); }
+        .logo-badge { 
+            width: 42px; height: 42px; border-radius: 14px; 
+            background: linear-gradient(140deg, var(--primary), var(--accent)); 
+            color: white; font-family: 'Outfit', sans-serif; font-weight: 700; 
+            display: grid; place-items: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .logo-badge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+        .logo:hover .logo-badge::before {
+            opacity: 1;
+            animation: shimmer 0.6s ease-out;
+        }
+        .logo span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.2rem; color: var(--dark); }
+
+        nav { display: flex; gap: 0.6rem; align-items: center; }
+        nav a { 
+            text-decoration: none; padding: 0.5rem 1.1rem; border-radius: 30px; 
+            font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99,102,241,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        nav a:hover::before {
+            left: 100%;
+        }
+        nav a:hover { 
+            background: rgba(99,102,241,0.12); 
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99,102,241,0.15);
+        }
+
+        .dashboard {
+            width: min(1200px, 94%);
+            margin: 2.5rem auto 4rem;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+        }
+
+        aside {
+            background: var(--glass);
+            border-radius: 28px;
+            padding: 1.8rem;
+            box-shadow: 0 30px 50px rgba(99,102,241,0.15);
+            animation: slideInLeft 0.8s ease-out;
+            transition: all 0.3s ease;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+            z-index: 100;
+        }
+
+        aside:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 35px 70px rgba(99,102,241,0.2);
+        }
+
+        aside h3 { font-family: 'Outfit', sans-serif; margin-bottom: 1rem; }
+        aside ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        aside li { 
+            padding: 0.75rem 1rem; border-radius: 18px; 
+            background: rgba(99,102,241,0.08); font-weight: 600; color: #475569;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        aside li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        aside li:hover::before {
+            left: 100%;
+        }
+        aside li:hover {
+            transform: translateX(5px);
+            background: rgba(99,102,241,0.15);
+            color: var(--primary);
+        }
+        aside li.active { 
+            background: linear-gradient(120deg, var(--primary), var(--accent)); 
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .content { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2rem;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 1.5rem; 
+        }
+
+        .card {
+            background: var(--glass);
+            border-radius: 24px;
+            padding: 1.7rem;
+            box-shadow: 0 30px 45px rgba(15,23,42,0.08);
+            transition: all 0.4s ease;
+            animation: slideInUp 0.6s ease-out;
+            position: relative;
+            overflow: visible;
+            z-index: 1;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(99,102,241,0.15);
+            z-index: 10;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h2 { font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin: 0.3rem 0; }
+
+        /* Student Management Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-inactive { background: #fecaca; color: #dc2626; }
+
+        /* Hall Ticket Generator */
+        .generator-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 0.8rem;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning), #d97706);
+            color: white;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Seating Layout Builder */
+        .seating-builder {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 1rem;
+        }
+
+        .seating-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .seating-preview {
+            display: grid;
+            gap: 0.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .seat-row {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .seat {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .seat.available {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .seat.selected {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+        }
+
+        .seat:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        /* Real-time Notifications */
+        .notification-panel {
+            position: fixed;
+            top: 6rem;
+            right: 2rem;
+            width: 300px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+            animation: slideInRight 0.3s ease-out;
+            pointer-events: auto;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100%); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Analytics Charts */
+        .chart-container {
+            height: 300px;
+            background: #f8fafc;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .progress-ring {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin: 0 auto;
+        }
+
+        .progress-ring svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 8;
+        }
+
+        .progress-ring .bg {
+            stroke: #e5e7eb;
+        }
+
+        .progress-ring .progress {
+            stroke: url(#gradient);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        /* Chatbot */
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(99,102,241,0.3);
+            transition: all 0.3s ease;
+            z-index: 9998;
+        }
+
+        .chatbot-toggle:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 35px rgba(99,102,241,0.4);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 100px;
+            right: 2rem;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            z-index: 9998;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            padding: 1rem;
+            border-radius: 20px 20px 0 0;
+            font-weight: 600;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .message {
+            padding: 0.8rem;
+            border-radius: 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background: #e5e7eb;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            align-self: flex-start;
+        }
+
+        .chatbot-input {
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            outline: none;
+        }
+
+        .chatbot-input button {
+            padding: 0.8rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .quick-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-question {
+            background: #f3f4f6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quick-question:hover {
+            background: rgba(99,102,241,0.1);
+            color: var(--primary);
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 960px) {
+            .dashboard { grid-template-columns: 1fr; }
+            header, .dashboard { width: min(1200px, 90%); }
+            .chatbot-window { width: 300px; }
+            .notification-panel { width: 250px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="index.html">
+            <div class="logo-badge">CE</div>
+            <span>CampusEdge · Admin</span>
+        </a>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="student-dashboard.html">Student</a>
+            <a href="faculty-dashboard.html">Faculty</a>
+            <a href="management-dashboard.html">Management</a>
+        </nav>
+    </header>
+
+    <section class="dashboard">
+        <aside>
+            <h3>Navigation</h3>
+            <ul>
+                <li class="active" onclick="showSection('dashboard')">Dashboard</li>
+                <li onclick="showSection('students')">Student Records</li>
+                <li onclick="showSection('faculty')">Faculty Management</li>
+                <li onclick="showSection('exams')">Exam Scheduling</li>
+                <li onclick="showSection('halltickets')">Hall Tickets</li>
+                <li onclick="showSection('seating')">Seating Setup</li>
+                <li onclick="showSection('analytics')">Analytics</li>
+                <li onclick="showSection('settings')">System Settings</li>
+            </ul>
+        </aside>
+
+        <div class="content">
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="section">
+                <div class="grid">
+                    <div class="card">
+                        <p>Total Students</p>
+                        <h2>2,847</h2>
+                        <p>Active enrollments this semester</p>
+                    </div>
+                    <div class="card">
+                        <p>Faculty Members</p>
+                        <h2>142</h2>
+                        <p>Teaching and research staff</p>
+                    </div>
+                    <div class="card">
+                        <p>Ongoing Exams</p>
+                        <h2>8</h2>
+                        <p>Mid-semester examinations</p>
+                    </div>
+                    <div class="card">
+                        <p>Hall Tickets</p>
+                        <h2>2,654</h2>
+                        <p>Generated for current exam cycle</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>System Status</h3>
+                    <div class="grid" style="margin-top: 1rem;">
+                        <div style="text-align: center;">
+                            <div class="progress-ring">
+                                <svg>
+                                    <defs>
+                                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" style="stop-color:#6366f1"/>
+                                            <stop offset="100%" style="stop-color:#06b6d4"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="bg" cx="60" cy="60" r="52"/>
+                                    <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="65"/>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">80%</div>
+                            </div>
+                            <p><strong>Server Performance</strong></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="progress-ring">
+                                <svg>
+                                    <circle class="bg" cx="60" cy="60" r="52"/>
+                                    <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="32"/>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">90%</div>
+                            </div>
+                            <p><strong>Database Health</strong></p>
+                        </div>
+                        <div style="text-align: center;">
+                            <div class="progress-ring">
+                                <svg>
+                                    <circle class="bg" cx="60" cy="60" r="52"/>
+                                    <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="16"/>
+                                </svg>
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">95%</div>
+                            </div>
+                            <p><strong>Network Uptime</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Records Section -->
+            <div id="students-section" class="section hidden">
+                <div class="card">
+                    <h3>Student Management</h3>
+                    <div style="display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="addStudent()">Add New Student</button>
+                        <button class="btn btn-success" onclick="bulkImport()">Bulk Import</button>
+                        <button class="btn btn-warning" onclick="exportData()">Export Data</button>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Program</th>
+                                <th>Semester</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>21CSE001</td>
+                                <td>Aarav Sharma</td>
+                                <td>B.Tech CSE</td>
+                                <td>VI</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editStudent('21CSE001')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>21CSE002</td>
+                                <td>Priya Patel</td>
+                                <td>B.Tech CSE</td>
+                                <td>VI</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editStudent('21CSE002')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>21CSE003</td>
+                                <td>Vikram Singh</td>
+                                <td>B.Tech CSE</td>
+                                <td>VI</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editStudent('21CSE003')">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Faculty Management Section -->
+            <div id="faculty-section" class="section hidden">
+                <div class="card">
+                    <h3>Faculty Management</h3>
+                    <div style="display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="addFaculty()">Add Faculty</button>
+                        <button class="btn btn-success" onclick="assignCourses()">Assign Courses</button>
+                        <button class="btn btn-warning" onclick="scheduleInvigilation()">Schedule Invigilation</button>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Faculty ID</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Courses</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>FAC001</td>
+                                <td>Dr. Rajesh Kumar</td>
+                                <td>Computer Science</td>
+                                <td>4</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editFaculty('FAC001')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>FAC002</td>
+                                <td>Prof. Sunita Sharma</td>
+                                <td>Computer Science</td>
+                                <td>3</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="editFaculty('FAC002')">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Exam Scheduling Section -->
+            <div id="exams-section" class="section hidden">
+                <div class="card">
+                    <h3>Exam Scheduling</h3>
+                    <div class="generator-form">
+                        <div class="form-group">
+                            <label>Exam Type</label>
+                            <select id="examType">
+                                <option>Mid-Semester</option>
+                                <option>End-Semester</option>
+                                <option>Supplementary</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Program</label>
+                            <select id="examProgram">
+                                <option>B.Tech CSE</option>
+                                <option>B.Tech ECE</option>
+                                <option>MBA</option>
+                                <option>M.Tech</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Semester</label>
+                            <select id="examSemester">
+                                <option>I</option>
+                                <option>II</option>
+                                <option>III</option>
+                                <option>IV</option>
+                                <option>V</option>
+                                <option>VI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" id="examStartDate" value="2025-03-15">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 1rem;" onclick="generateSchedule()">Generate Schedule</button>
+                    
+                    <div id="examScheduleResult" style="margin-top: 2rem; display: none;">
+                        <h4>Generated Schedule</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Hall</th>
+                                    <th>Invigilator</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody">
+                                <!-- Generated content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hall Tickets Section -->
+            <div id="halltickets-section" class="section hidden">
+                <div class="card">
+                    <h3>Hall Ticket Management</h3>
+                    <div class="generator-form">
+                        <div class="form-group">
+                            <label>Program / Semester</label>
+                            <select id="hallTicketProgram">
+                                <option>B.Tech CSE - Semester VI</option>
+                                <option>B.Tech ECE - Semester IV</option>
+                                <option>MBA - Semester II</option>
+                                <option>M.Tech - Semester II</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Examination Type</label>
+                            <select id="hallTicketExam">
+                                <option>Mid Semester - March 2025</option>
+                                <option>End Semester - May 2025</option>
+                                <option>Supplementary - June 2025</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Template</label>
+                            <select id="hallTicketTemplate">
+                                <option>Standard Template</option>
+                                <option>QR Code Template</option>
+                                <option>Photo Template</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="generateHallTickets()">Generate Hall Tickets</button>
+                        <button class="btn btn-success" onclick="previewHallTicket()">Preview</button>
+                        <button class="btn btn-warning" onclick="downloadBulk()">Download All</button>
+                    </div>
+                    
+                    <div class="grid" style="margin-top: 2rem;">
+                        <div class="card">
+                            <h4>Generation Status</h4>
+                            <p><strong>Total Students:</strong> 156</p>
+                            <p><strong>Generated:</strong> 156</p>
+                            <p><strong>Downloaded:</strong> 142</p>
+                            <p><strong>Pending:</strong> 14</p>
+                        </div>
+                        <div class="card">
+                            <h4>Recent Activity</h4>
+                            <p>• Hall tickets generated for CSE VI</p>
+                            <p>• 142 students downloaded tickets</p>
+                            <p>• QR codes validated successfully</p>
+                            <p>• Backup created automatically</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Seating Setup Section -->
+            <div id="seating-section" class="section hidden">
+                <div class="card">
+                    <h3>Examination Hall Setup</h3>
+                    <div class="generator-form">
+                        <div class="form-group">
+                            <label>Examination Hall</label>
+                            <select id="hallName">
+                                <option>Main Block - Hall 201</option>
+                                <option>Main Block - Hall 202</option>
+                                <option>Science Block - Hall 301</option>
+                                <option>Engineering Block - Hall 401</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Exam Date</label>
+                            <input type="date" id="seatDate" value="2025-03-15">
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" id="seatSubject" placeholder="Data Structures">
+                        </div>
+                        <div class="form-group">
+                            <label>Total Seats</label>
+                            <input type="number" id="totalSeats" placeholder="120" value="120">
+                        </div>
+                    </div>
+                    
+                    <div class="seating-builder">
+                        <div class="seating-controls">
+                            <button class="btn btn-primary" onclick="generateSeating()">Generate Layout</button>
+                            <button class="btn btn-success" onclick="autoAssign()">Auto Assign</button>
+                            <button class="btn btn-warning" onclick="exportSeating()">Export Layout</button>
+                        </div>
+                        
+                        <div class="seating-preview" id="seatingPreview">
+                            <div style="background: #374151; color: white; text-align: center; padding: 1rem; border-radius: 12px; margin-bottom: 2rem;">
+                                BLACKBOARD
+                            </div>
+                            <!-- Seating layout will be generated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics-section" class="section hidden">
+                <div class="card">
+                    <h3>System Analytics</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Student Performance</h4>
+                            <div class="chart-container">
+                                <div style="text-align: center;">
+                                    <div class="progress-ring">
+                                        <svg>
+                                            <circle class="bg" cx="60" cy="60" r="52"/>
+                                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="49"/>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">85%</div>
+                                    </div>
+                                    <p><strong>Average Pass Rate</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Attendance Trends</h4>
+                            <div class="chart-container">
+                                <div style="text-align: center;">
+                                    <div class="progress-ring">
+                                        <svg>
+                                            <circle class="bg" cx="60" cy="60" r="52"/>
+                                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="65"/>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">80%</div>
+                                    </div>
+                                    <p><strong>Overall Attendance</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h4>Faculty Efficiency</h4>
+                            <div class="chart-container">
+                                <div style="text-align: center;">
+                                    <div class="progress-ring">
+                                        <svg>
+                                            <circle class="bg" cx="60" cy="60" r="52"/>
+                                            <circle class="progress" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="32"/>
+                                        </svg>
+                                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 600;">90%</div>
+                                    </div>
+                                    <p><strong>Course Completion</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Settings Section -->
+            <div id="settings-section" class="section hidden">
+                <div class="card">
+                    <h3>System Configuration</h3>
+                    <div class="grid">
+                        <div class="card">
+                            <h4>Academic Settings</h4>
+                            <div class="form-group">
+                                <label>Current Semester</label>
+                                <select>
+                                    <option>Spring 2025</option>
+                                    <option>Fall 2024</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Attendance %</label>
+                                <input type="number" value="75">
+                            </div>
+                            <button class="btn btn-primary">Save Settings</button>
+                        </div>
+                        <div class="card">
+                            <h4>Notification Settings</h4>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> Email Notifications
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> SMS Alerts
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox"> Push Notifications
+                                </label>
+                            </div>
+                            <button class="btn btn-primary">Update Preferences</button>
+                        </div>
+                        <div class="card">
+                            <h4>Security Settings</h4>
+                            <div class="form-group">
+                                <label>Session Timeout (minutes)</label>
+                                <input type="number" value="30">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" checked> Two-Factor Authentication
+                                </label>
+                            </div>
+                            <button class="btn btn-primary">Apply Security</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-time Notifications -->
+    <div class="notification-panel" id="notificationPanel">
+        <!-- Notifications will appear here -->
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chatbot-toggle" onclick="toggleChatbot()">💬</div>
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Admin Assistant</span>
+                <span onclick="toggleChatbot()" style="cursor: pointer;">×</span>
+            </div>
+        </div>
+        <div class="chatbot-messages" id="chatbotMessages">
+            <div class="message bot">Hello Admin! I can help you manage students, faculty, exams, and system settings. What do you need assistance with?</div>
+            <div class="quick-questions">
+                <div class="quick-question" onclick="askQuestion('Show system status')">System Status</div>
+                <div class="quick-question" onclick="askQuestion('Generate hall tickets')">Hall Tickets</div>
+                <div class="quick-question" onclick="askQuestion('Student statistics')">Student Stats</div>
+                <div class="quick-question" onclick="askQuestion('Exam schedule')">Exam Schedule</div>
+            </div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your question..." onkeypress="handleChatKeypress(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            document.getElementById(sectionName + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('aside li').forEach(li => {
+                li.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Student Management
+        function addStudent() {
+            showNotification('Student registration form opened', 'info');
+        }
+
+        function editStudent(rollNo) {
+            showNotification(`Editing student ${rollNo}`, 'info');
+        }
+
+        function bulkImport() {
+            showNotification('Bulk import wizard launched', 'success');
+        }
+
+        function exportData() {
+            showNotification('Student data exported successfully', 'success');
+        }
+
+        // Faculty Management
+        function addFaculty() {
+            showNotification('Faculty registration form opened', 'info');
+        }
+
+        function editFaculty(facId) {
+            showNotification(`Editing faculty ${facId}`, 'info');
+        }
+
+        function assignCourses() {
+            showNotification('Course assignment panel opened', 'info');
+        }
+
+        function scheduleInvigilation() {
+            showNotification('Invigilation scheduler opened', 'info');
+        }
+
+        // Exam Scheduling
+        function generateSchedule() {
+            const examType = document.getElementById('examType').value;
+            const program = document.getElementById('examProgram').value;
+            const semester = document.getElementById('examSemester').value;
+            
+            // Show generated schedule
+            document.getElementById('examScheduleResult').style.display = 'block';
+            
+            const scheduleData = [
+                ['Data Structures', 'March 15, 2025', '9:00 AM - 12:00 PM', 'Hall 201', 'Dr. Rajesh Kumar'],
+                ['Operating Systems', 'March 18, 2025', '2:00 PM - 5:00 PM', 'Hall 202', 'Prof. Sunita Sharma'],
+                ['Database Management', 'March 22, 2025', '9:00 AM - 12:00 PM', 'Hall 203', 'Dr. Amit Singh'],
+                ['Software Engineering', 'March 25, 2025', '2:00 PM - 5:00 PM', 'Hall 201', 'Prof. Neha Gupta']
+            ];
+            
+            const tbody = document.getElementById('scheduleTableBody');
+            tbody.innerHTML = '';
+            
+            scheduleData.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    td.textContent = cell;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+            
+            showNotification(`${examType} schedule generated for ${program} Semester ${semester}`, 'success');
+        }
+
+        // Hall Ticket Management
+        function generateHallTickets() {
+            showNotification('Hall tickets generation started...', 'info');
+            setTimeout(() => {
+                showNotification('156 hall tickets generated successfully!', 'success');
+            }, 2000);
+        }
+
+        function previewHallTicket() {
+            showNotification('Hall ticket preview opened', 'info');
+        }
+
+        function downloadBulk() {
+            showNotification('Bulk download started...', 'info');
+            setTimeout(() => {
+                showNotification('All hall tickets downloaded successfully!', 'success');
+            }, 1500);
+        }
+
+        // Seating Management
+        function generateSeating() {
+            const totalSeats = parseInt(document.getElementById('totalSeats').value) || 120;
+            const seatsPerRow = 10;
+            const rows = Math.ceil(totalSeats / seatsPerRow);
+            
+            const preview = document.getElementById('seatingPreview');
+            const existingSeats = preview.querySelectorAll('.seat-row');
+            existingSeats.forEach(row => row.remove());
+            
+            for (let row = 0; row < rows; row++) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'seat-row';
+                
+                for (let seat = 1; seat <= seatsPerRow && (row * seatsPerRow + seat) <= totalSeats; seat++) {
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = 'seat available';
+                    seatDiv.textContent = String.fromCharCode(65 + row) + seat;
+                    seatDiv.onclick = () => toggleSeat(seatDiv);
+                    rowDiv.appendChild(seatDiv);
+                }
+                
+                preview.appendChild(rowDiv);
+            }
+            
+            showNotification(`Seating layout generated for ${totalSeats} seats`, 'success');
+        }
+
+        function toggleSeat(seatElement) {
+            seatElement.classList.toggle('selected');
+        }
+
+        function autoAssign() {
+            const seats = document.querySelectorAll('.seat.available');
+            seats.forEach((seat, index) => {
+                if (index % 3 === 0) { // Assign every 3rd seat for spacing
+                    seat.classList.add('selected');
+                }
+            });
+            showNotification('Students auto-assigned to seats', 'success');
+        }
+
+        function exportSeating() {
+            showNotification('Seating layout exported successfully', 'success');
+        }
+
+        // Notifications
+        function showNotification(message, type = 'info') {
+            const panel = document.getElementById('notificationPanel');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>${message}</span>
+                    <span onclick="this.parentElement.parentElement.remove()" style="cursor: pointer; font-weight: bold;">×</span>
+                </div>
+            `;
+            
+            panel.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Chatbot functionality
+        function toggleChatbot() {
+            const window = document.getElementById('chatbotWindow');
+            window.style.display = window.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function askQuestion(question) {
+            addMessage(question, 'user');
+            setTimeout(() => {
+                const answer = getAdminAnswer(question);
+                addMessage(answer, 'bot');
+            }, 500);
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                askQuestion(message);
+                input.value = '';
+            }
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function addMessage(text, sender) {
+            const messages = document.getElementById('chatbotMessages');
+            const message = document.createElement('div');
+            message.className = `message ${sender}`;
+            message.textContent = text;
+            messages.appendChild(message);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        function getAdminAnswer(question) {
+            const answers = {
+                'Show system status': 'System Status: Server 80%, Database 90%, Network 95%. All systems operational.',
+                'Generate hall tickets': 'Hall ticket generator is ready. Select program and exam type to generate tickets for students.',
+                'Student statistics': 'Total: 2,847 students. Active: 2,654. Pending: 193. Average attendance: 87%.',
+                'Exam schedule': 'Current exam cycle: Mid-semester. 8 exams scheduled. Next: Data Structures on March 15.',
+                'default': 'I can help with student management, faculty coordination, exam scheduling, hall tickets, seating arrangements, and system analytics. What would you like to know?'
+            };
+            
+            return answers[question] || answers['default'];
+        }
+
+        // Initialize notifications
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                showNotification('Welcome to Admin Dashboard! System status: All services running normally.', 'success');
+            }, 1000);
+            
+            // Simulate real-time notifications
+            setInterval(() => {
+                const notifications = [
+                    'New student registration received',
+                    'Hall ticket downloaded by student',
+                    'Faculty marked attendance for CS301',
+                    'System backup completed successfully'
+                ];
+                
+                if (Math.random() < 0.3) { // 30% chance every 10 seconds
+                    const randomNotification = notifications[Math.floor(Math.random() * notifications.length)];
+                    showNotification(randomNotification, 'info');
+                }
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
